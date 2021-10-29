@@ -29,7 +29,9 @@ The largest batch size is 256 transactions. The cost to verify a rollup is fixed
 Assuming 256 transactions in a batch each user would pay:
 
 Rollup verification gas cost: `(400,000 / 256) + 3,500= 5062 gas`
+
 Claim rollup verification gas cost: `(400,000 / 256) + 3,500 = 5062 gas`
+
 Uniswap bridge gas cost: `180,000 / 256 = 703 gas`
 
 **Total = ~11,000 gas for a Uniswap trade**
