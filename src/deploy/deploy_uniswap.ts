@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { ContractTransaction } from '@ethersproject/contracts';
-import UniswapV2FactoryJson from '@uniswap/v2-core/build/UniswapV2Factory.json';
+import UniswapV3FactoryJson from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json';
+import SwapRouterJson from '@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json';
+import { UniswapV3Deployer } from 'uniswap-v3-deploy-plugin/dist/deployer/UniswapV3Deployer';
+
 import UniswapV2PairJson from '@uniswap/v2-core/build/UniswapV2Pair.json';
 import IWETH from '@uniswap/v2-periphery/build/IWETH.json';
 import WETH9 from '@uniswap/v2-periphery/build/WETH9.json';
-import UniswapV2Router02Json from '@uniswap/v2-periphery/build/UniswapV2Router02.json';
 import { Contract, ContractFactory, Signer } from 'ethers';
 
 export const createPair = async (
@@ -12,9 +14,13 @@ export const createPair = async (
   router: Contract,
   asset: Contract,
   initialTokenSupply = 1000n * 10n ** 18n,
-  initialEthSupply = 10n ** 18n,
+  initialEthSupply = 10n ** 18n
 ) => {
-  const factory = new Contract(await router.factory(), UniswapV2FactoryJson.abi, owner);
+  const factory = new Contract(
+    await router.factory(),
+    UniswapV3FactoryJson.abi,
+    owner
+  );
   const weth = new Contract(await router.WETH(), IWETH.abi, owner);
   const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -23,7 +29,8 @@ export const createPair = async (
     return;
   }
 
-  const minConfirmations = [1337, 31337].indexOf(await owner.getChainId()) >= 0 ? 1 : 3;
+  const minConfirmations =
+    [1337, 31337].indexOf(await owner.getChainId()) >= 0 ? 1 : 3;
   const withConfirmation = async (action: Promise<ContractTransaction>) => {
     const tx2 = await action;
     await tx2.wait(minConfirmations);
@@ -48,7 +55,11 @@ export const createPair = async (
 
 export const deployUniswap = async (owner: Signer) => {
   console.log('Deploying UniswapFactory...');
-  const UniswapFactory = new ContractFactory(UniswapV2FactoryJson.abi, UniswapV2FactoryJson.bytecode, owner);
+  const UniswapFactory = new ContractFactory(
+    UniswapV3FactoryJson.abi,
+    UniswapV3FactoryJson.bytecode,
+    owner
+  );
   const factory = await UniswapFactory.deploy(await owner.getAddress());
   console.log(`UniswapFactory contract address: ${factory.address}`);
 
@@ -57,10 +68,14 @@ export const deployUniswap = async (owner: Signer) => {
   const weth = await WETHFactory.deploy();
   console.log(`WETH contract address: ${weth.address}`);
 
-  console.log('Deploying UniswapV2Router...');
-  const UniswapV2Router = new ContractFactory(UniswapV2Router02Json.abi, UniswapV2Router02Json.bytecode, owner);
-  const router = await UniswapV2Router.deploy(factory.address, weth.address);
-  console.log(`UniswapV2Router contract address: ${router.address}`);
+  console.log('Deploying SwapRouter...');
+  const SwapRouter = new ContractFactory(
+    SwapRouterJson.abi,
+    SwapRouterJson.bytecode,
+    owner
+  );
+  const router = await SwapRouter.deploy(factory.address, weth.address);
+  console.log(`SwapRouter contract address: ${router.address}`);
 
   return router;
 };
