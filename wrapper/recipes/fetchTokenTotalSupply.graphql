@@ -1,6 +1,0 @@
-query {
-  fetchTokenTotalSupply(
-    chainId: $chainId
-    address: $address
-  )
-}

@@ -1,0 +1,56 @@
+{
+  "name": "private-swap",
+  "version": "0.0.0",
+  "author": "Xuefeng Zhu @Xuefeng-Zhu",
+  "bin": {
+    "private-swap": "./bin/run"
+  },
+  "bugs": "https://github.com/Xuefeng-Zhu/private-swap/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^3",
+    "cli-ux": "^5.6.3",
+    "conf": "^10.0.3",
+    "conf-cli": "^0.1.9",
+    "crypto": "^1.0.1",
+    "ethers": "^5.5.1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "eslint": "^5.13",
+    "eslint-config-oclif": "^3.1",
+    "globby": "^10"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/Xuefeng-Zhu/private-swap",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "private-swap",
+    "plugins": [
+      "@oclif/plugin-help",
+      "conf-cli"
+    ]
+  },
+  "repository": "Xuefeng-Zhu/private-swap",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint .",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
