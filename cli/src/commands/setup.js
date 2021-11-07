@@ -14,6 +14,12 @@ class SetupCommand extends Command {
     const aztecRpc = await cli.prompt("Please enter Aztec rpc", {
       default: "https://api.aztec.network/falafel-defi-bridge",
     });
+    const uniswapBridge = await cli.prompt(
+      "Please enter Uniswap bridge adddress",
+      {
+        default: "0xC4528eDC0F2CaeA2b9c65D05aa9A460891C5f2d4",
+      }
+    );
     const ethPrivateKey = await cli.prompt(
       "What is your Ethereum private key?",
       {
@@ -32,6 +38,7 @@ class SetupCommand extends Command {
 
     config.set("ethereumRpc", ethereumRpc);
     config.set("aztecRpc", aztecRpc);
+    config.set("uniswapBridge", uniswapBridge);
     config.set("ethPrivateKey", ethPrivateKey);
     config.set("aztecPrivateKey", aztecPrivateKey);
     config.delete("userId");

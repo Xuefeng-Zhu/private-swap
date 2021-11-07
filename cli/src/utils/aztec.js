@@ -12,6 +12,7 @@ const { JsonRpcProvider } = require("@ethersproject/providers");
 const ethers = require("ethers");
 const Conf = require("conf");
 const _ = require("lodash");
+const { cli } = require("cli-ux");
 
 const init = async () => {
   const config = new Conf();
@@ -29,8 +30,9 @@ const init = async () => {
   const walletProvider = new WalletProvider(ethereumProvider);
   walletProvider.addAccount(ethPrivateKey);
 
+  cli.action.start("Init aztec");
   const sdk = await createWalletSdk(walletProvider, aztecRpc, {
-    syncInstances: true,
+    syncInstances: false,
     saveProvingKey: false,
     dbPath: "./db",
     minConfirmation: 1,
@@ -39,6 +41,7 @@ const init = async () => {
   });
   await sdk.init();
   await sdk.awaitSynchronised();
+  cli.action.stop();
 
   let user;
   if (!userId) {
