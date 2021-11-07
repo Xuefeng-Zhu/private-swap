@@ -1,30 +1,21 @@
 const { AssetId } = require("@aztec/sdk");
 const { Command, flags } = require("@oclif/command");
-const { cli } = require("cli-ux");
+const ethers = require("ethers");
 const { init, ASSETS } = require("../utils/aztec");
 
 class BalanceCommand extends Command {
   async run() {
-    const { args } = this.parse(BalanceCommand);
-    const { user } = await init();
-    const asset = user.getAsset(AssetId[args.asset]);
-    const balance = asset.balance();
+    const { sdk, user } = await init();
 
-    console.log(`${args.asset}: `, balance);
+    for (let asset of ASSETS) {
+      const balance = sdk.getBalance(AssetId[asset], user.id);
+      console.log(`${asset}: `, ethers.utils.formatUnits(balance));
+    }
     this.exit();
   }
 }
 
-BalanceCommand.args = [
-  {
-    name: "asset",
-    required: true,
-    hidden: false,
-    options: ASSETS,
-    description: "asset symbol",
-  },
-];
-BalanceCommand.description = `Get Aztec account balance
+BalanceCommand.description = `Get Aztec account balances
 `;
 
 module.exports = BalanceCommand;

@@ -18,7 +18,10 @@ const init = async () => {
   const ethereumRpc = config.get("ethereumRpc");
   const aztecRpc = config.get("aztecRpc");
   const ethPrivateKey = config.get("ethPrivateKey");
-  const aztecPrivateKey = config.get("aztecPrivateKey");
+  const aztecPrivateKey = Buffer.from(
+    config.get("aztecPrivateKey").slice(2),
+    "hex"
+  );
   const userId = config.get("userId");
 
   const ethersProvider = new JsonRpcProvider(ethereumRpc);
@@ -26,8 +29,8 @@ const init = async () => {
   const walletProvider = new WalletProvider(ethereumProvider);
   walletProvider.addAccount(ethPrivateKey);
 
-  sdk = await createWalletSdk(walletProvider, aztecRpc, {
-    syncInstances: false,
+  const sdk = await createWalletSdk(walletProvider, aztecRpc, {
+    syncInstances: true,
     saveProvingKey: false,
     dbPath: "./db",
     minConfirmation: 1,
@@ -39,7 +42,7 @@ const init = async () => {
 
   let user;
   if (!userId) {
-    user = await sdk.addUser(Buffer.from(aztecPrivateKey, "hex"));
+    user = await sdk.addUser(aztecPrivateKey);
     config.set("userId", user.id.toString());
   } else {
     user = sdk.getUser(AccountId.fromString(userId));
@@ -48,6 +51,8 @@ const init = async () => {
   return {
     sdk,
     user,
+    aztecPrivateKey,
+    walletProvider,
   };
 };
 
