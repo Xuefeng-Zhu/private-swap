@@ -1,6 +1,6 @@
-# UNICode x Aztec Connect
+# AzUniswap
 
-![](https://i.imgur.com/ig94Xoa.jpg)
+AzUniswap enables users to perform private and cheap swap on Uniswap through aztec bridge without sacrificing liquidity on Uniswap Etherum Mainnet. It will be useful for users, who want to make large amount of token swap, but are afraid of large slippage and front run by other traders.
 
 ## What is Aztec?
 
