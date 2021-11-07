@@ -7,6 +7,7 @@
   },
   "bugs": "https://github.com/Xuefeng-Zhu/private-swap/issues",
   "dependencies": {
+    "@aztec/sdk": "^2.1.2",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
@@ -14,7 +15,8 @@
     "conf": "^10.0.3",
     "conf-cli": "^0.1.9",
     "crypto": "^1.0.1",
-    "ethers": "^5.5.1"
+    "ethers": "^5.5.1",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",

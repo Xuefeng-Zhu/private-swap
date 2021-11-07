@@ -34,6 +34,7 @@ class SetupCommand extends Command {
     config.set("aztecRpc", aztecRpc);
     config.set("ethPrivateKey", ethPrivateKey);
     config.set("aztecPrivateKey", aztecPrivateKey);
+    config.delete("userId");
   }
 }
 
