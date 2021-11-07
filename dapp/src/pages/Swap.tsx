@@ -22,11 +22,11 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useWeb3ApiClient } from '@web3api/react';
 import Decimal from 'decimal.js-light';
 import { swapTokenPair } from '../web3api/swapTokenPair';
-import { createWalletSdk } from '@aztec/sdk';
+import { createWalletSdk, WalletProvider } from '@aztec/sdk';
 import { useAsync } from 'react-use';
 
 export default function Swap() {
-  const { chainId, account } = useWeb3React();
+  const { chainId, account, library } = useWeb3React();
   const client = useWeb3ApiClient();
   const [tokenInIndex, setTokenInIndex] = useState(-1);
   const [tokenOutIndex, setTokenOutIndex] = useState(-1);
@@ -38,9 +38,22 @@ export default function Swap() {
     useState<Promise<void> | undefined>(undefined);
 
   useAsync(async () => {
-    const rollupProviderUrl = 'https://api.aztec.network/falafel';
-    // @ts-ignore
-    const aztecSdk = await createWalletSdk(window.ethereum, rollupProviderUrl);
+    const rollupProviderUrl = 'https://api.aztec.network/falafel-defi-bridge';
+    const aztecSdk = await createWalletSdk(
+      new WalletProvider(library.provider),
+      rollupProviderUrl,
+      {
+        syncInstances: false,
+        saveProvingKey: false,
+        clearDb: true,
+        dbPath: ':memory:',
+        minConfirmation: 1,
+        debug: true,
+        minConfirmationEHW: 1,
+      }
+    );
+    console.log(aztecSdk);
+
     console.info(aztecSdk.getLocalStatus());
     // initState: 'UNINITIALIZED'
 
@@ -48,7 +61,7 @@ export default function Swap() {
 
     console.info(aztecSdk.getLocalStatus());
     // initState: 'INITIALIZED'
-  }, [account]);
+  }, [library]);
 
   const calculateTokenOutAmount = async () => {
     if (tokenInIndex < 0 || tokenOutIndex < 0) {
